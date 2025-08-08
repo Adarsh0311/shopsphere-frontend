@@ -3,7 +3,7 @@ import { BehaviorSubject, catchError, Observable, of, tap, throwError } from 'rx
 import { environment } from '../../../../environments/environment';
 import { CartItem } from '../../../models/cart-item.model';
 import { AuthService } from '../../auth/services/auth.service';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { CartResponse } from '../../../models/cart-response.model';
 import { AddToCartRequest } from '../../../models/add-to-cart-request.model';
 import { CartItemResponse } from '../../../models/cart-item.-response.model';
@@ -103,6 +103,49 @@ export class CartService {
 
   }
 
+  updateProductQuantity(productId: string, quantity: number) {
+    if (this.authService.isLoggedIn()) {
+      return this.http.put<CartResponse>(`${this.apiUrl}/update/${productId}`, {HttpParams: {'quantity': quantity }});
+    } else {
+      this.updateLocalCartQuantity(productId, quantity);
+      return of(this.cartResponse);
+    }
+  }
+
+  getCartItems(): Observable<CartResponse | null> {
+    return this.cartSubject.asObservable();
+  }
+
+  updateLocalCartQuantity(productId: string, quantity: number) {
+    if (!this.cartResponse) return;
+
+    const item = this.cartResponse.items.find(item => item.productId === productId);
+    if (item) {
+      item.quantity = quantity;
+      item.itemTotal = item.price * item.quantity;
+    }
+
+    this.cartResponse.totalAmount = this.getCartTotalAmount(this.cartResponse);
+    localStorage.setItem('cart', JSON.stringify(this.cartResponse));
+    this.cartSubject.next(this.cartResponse);
+  }
+
+  removeProductFromCart(productId: string): Observable<CartResponse | null> {
+    if (this.authService.isLoggedIn()) {
+      return this.http.delete<CartResponse>(`${this.apiUrl}/remove/${productId}`);
+    } else {
+      this.updateLocalCartAfterRemoval(productId);
+      return of(this.cartResponse);
+    }
+  }
+  updateLocalCartAfterRemoval(productId: string) {
+    if (!this.cartResponse) return;
+
+    this.cartResponse.items = this.cartResponse.items.filter(item => item.productId !== productId);
+    this.cartResponse.totalAmount = this.getCartTotalAmount(this.cartResponse);
+    localStorage.setItem('cart', JSON.stringify(this.cartResponse));
+    this.cartSubject.next(this.cartResponse);
+  }
 
     // Called when user logs in - merges local cart with server cart
   mergeCartsOnLogin(): Observable<CartResponse> {

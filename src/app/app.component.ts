@@ -3,11 +3,12 @@ import { RouterOutlet } from '@angular/router';
 import { environment } from '../environments/environment';
 import { RouterModule } from '@angular/router';
 import { LoginComponent } from "./features/auth/login/login.component";
+import { NavbarComponent } from './navbar/navbar/navbar.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, RouterModule, LoginComponent],
+  imports: [RouterOutlet, RouterModule, NavbarComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })

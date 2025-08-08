@@ -1,0 +1,82 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom sticky-top">
+  <div class="container">
+    <!-- Logo -->
+    <a class="navbar-brand d-flex align-items-center" routerLink="/">
+      <span class="fw-bold text-primary">ShopSphere</span>
+    </a>
+
+    <!-- Mobile Toggle -->
+    <button class="navbar-toggler" type="button" (click)="toggleMenu()" 
+            aria-controls="navbarNav" [attr.aria-expanded]="isMenuOpen" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <!-- Nav Links -->
+    <div class="collapse navbar-collapse" [class.show]="isMenuOpen" id="navbarNav">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/categories" routerLinkActive="active">Categories</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/deals" routerLinkActive="active">Deals</a>
+        </li>
+      </ul>
+
+      <!-- Search Form -->
+      <form class="d-flex me-auto col-12 col-lg-4 mb-3 mb-lg-0" (ngSubmit)="search()">
+        <div class="input-group">
+          <input 
+            class="form-control" 
+            type="search" 
+            placeholder="Search products..." 
+            aria-label="Search"
+            [(ngModel)]="searchQuery"
+            name="searchQuery"
+          >
+          <button class="btn btn-outline-primary" type="submit">
+            <i class="bi bi-search"></i>
+          </button>
+        </div>
+      </form>
+
+      <!-- Right-aligned items -->
+      <ul class="navbar-nav ms-auto">
+        <!-- Cart -->
+        <li class="nav-item">
+          <a class="nav-link position-relative" routerLink="/cart" routerLinkActive="active">
+            <i class="bi bi-cart3 fs-5"></i>
+            <span *ngIf="cartItemCount > 0" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+              {{ cartItemCount }}
+            </span>
+          </a>
+        </li>
+
+        <!-- User Menu -->
+        <li class="nav-item dropdown" *ngIf="isLoggedIn">
+          <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="bi bi-person-circle fs-5"></i>
+          </a>
+          <ul class="dropdown-menu dropdown-menu-end">
+            <li><a class="dropdown-item" routerLink="/profile">My Profile</a></li>
+            <li><a class="dropdown-item" routerLink="/orders">My Orders</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="#" (click)="logout(); $event.preventDefault()">Logout</a></li>
+          </ul>
+        </li>
+
+        <!-- Auth Links -->
+        <ng-container *ngIf="!isLoggedIn">
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/login" routerLinkActive="active">Login</a>
+          </li>
+          <li class="nav-item">
+            <a class="btn btn-primary btn-sm mt-1" routerLink="/register">Sign Up</a>
+          </li>
+        </ng-container>
+      </ul>
+    </div>
+  </div>
+</nav>
