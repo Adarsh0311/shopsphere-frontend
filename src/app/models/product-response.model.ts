@@ -5,6 +5,6 @@ export interface ProductResponse {
   price: number;
   imageUrl?: string;
   stockQuantity: number;
-  categoryId: number;
+  categoryId: string;
   categoryName?: string;
 }

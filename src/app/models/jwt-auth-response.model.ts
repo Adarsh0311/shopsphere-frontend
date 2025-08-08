@@ -3,5 +3,6 @@ export interface JwtAuthResponse {
   tokenType: string;
   username: string;
   email: string;
+  userId: string;
 }
 

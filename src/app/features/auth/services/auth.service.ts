@@ -7,11 +7,13 @@ import { JwtAuthResponse } from '../../../models/jwt-auth-response.model';
 import { LoginRequest } from '../../../models/login-request.model';
 import { RegisterRequest } from '../../../models/register-request.model';
 import { User } from '../../../models/user.model';
+import { CartService } from '../../cart/services/cart.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
+  
   private readonly API_URL = environment.apiUrl;
   private readonly USER_KEY = 'current_user';
 
@@ -22,7 +24,8 @@ export class AuthService {
 
   constructor(
     private http: HttpClient,
-    private router: Router
+    private router: Router,
+
   ) { 
   
   }
@@ -55,6 +58,7 @@ export class AuthService {
         if (environment.enableLogging) {
           console.log('User logged in successfully:', response);
         }
+
         return response;
       }));
   }
@@ -99,6 +103,10 @@ export class AuthService {
       console.error('Error parsing user data from storage:', error);
       return null;
     }
+  }
+
+  isLoggedIn(): boolean {
+    return !!this.currentUserSubject.value && !!this.currentUserSubject.value.accessToken;
   }
 
   private handleError = (error: any) => {

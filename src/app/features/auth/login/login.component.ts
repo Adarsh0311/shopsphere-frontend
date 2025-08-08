@@ -4,6 +4,7 @@ import { AuthService } from '../services/auth.service';
 import { Router } from '@angular/router';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { CartService } from '../../cart/services/cart.service';
 
 @Component({
   selector: 'app-login',
@@ -21,7 +22,8 @@ export class LoginComponent implements OnInit{
   constructor(
     private authService: AuthService,
     private router: Router,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private cartService: CartService
   ) {
   }
 
@@ -48,6 +50,7 @@ export class LoginComponent implements OnInit{
           this.isLoading = false;
           //this.router.navigate(['/products']);
           alert('Login successful!');
+          this.cartService.mergeCartsOnLogin().subscribe();
         },
         error: (error) => {
           this.isLoading = false;

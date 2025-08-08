@@ -1,0 +1,107 @@
+<div class="container py-4">
+  <!-- Loading Spinner -->
+  <div *ngIf="isLoading" class="text-center py-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+    <p class="mt-2">Loading product details...</p>
+  </div>
+
+  <!-- Error Message -->
+  <div *ngIf="errorMessage" class="alert alert-danger" role="alert">
+    {{ errorMessage }}
+  </div>
+
+  <!-- Product Details -->
+  <div *ngIf="product && !isLoading" class="product-details">
+    <!-- Breadcrumb Navigation -->
+    <nav aria-label="breadcrumb" class="mb-4">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a routerLink="/categories">Categories</a></li>
+        <li class="breadcrumb-item"><a [routerLink]="['/products/category', product.categoryId]">{{ product.categoryName }}</a></li>
+        <li class="breadcrumb-item active" aria-current="page">{{ product.name }}</li>
+      </ol>
+    </nav>
+
+    <div class="row">
+      <!-- Product Image -->
+      <div class="col-md-5 mb-4">
+        <div class="product-image-container">
+          <img *ngIf="product.imageUrl" [src]="product.imageUrl" class="img-fluid product-image" [alt]="product.name">
+          <div *ngIf="!product.imageUrl" class="placeholder-image d-flex align-items-center justify-content-center">
+            <i class="bi bi-image text-muted"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- Product Info -->
+      <div class="col-md-7">
+        <h1 class="product-title mb-3">{{ product.name }}</h1>
+        
+        <div class="product-price-container mb-4">
+          <span class="product-price">${{ product.price.toFixed(2) }}</span>
+          <span *ngIf="!isOutOfStock()" class="badge bg-success ms-2">In Stock</span>
+          <span *ngIf="isOutOfStock()" class="badge bg-danger ms-2">Out of Stock</span>
+        </div>
+
+        <div class="product-description mb-4">
+          <h5>Description</h5>
+          <p>{{ product.description }}</p>
+        </div>
+
+        <!-- Added to Cart Alert -->
+        <div *ngIf="addedToCart" class="alert alert-success mb-4" role="alert">
+          <i class="bi bi-check-circle me-2"></i> Product added to your cart!
+        </div>
+
+        <!-- Quantity and Add to Cart -->
+        <div class="mb-4">
+          <h5>Quantity</h5>
+          <div class="d-flex align-items-center quantity-control">
+            <button class="btn btn-outline-secondary" [disabled]="quantity <= 1" (click)="decrementQuantity()">
+              <i class="bi bi-dash"></i>
+            </button>
+            <input type="number" class="form-control text-center mx-2" [(ngModel)]="quantity" min="1" [max]="product.stockQuantity">
+            <button class="btn btn-outline-secondary" [disabled]="quantity >= product.stockQuantity" (click)="incrementQuantity()">
+              <i class="bi bi-plus"></i>
+            </button>
+          </div>
+          <small *ngIf="product.stockQuantity > 0" class="text-muted">
+            {{ product.stockQuantity }} item(s) available
+          </small>
+        </div>
+
+        <!-- Add to Cart Button -->
+        <button class="btn btn-primary btn-lg" (click)="addToCart()" [disabled]="isOutOfStock()">
+          <i class="bi bi-cart-plus me-2"></i> Add to Cart
+        </button>
+      </div>
+    </div>
+
+    <!-- Related Products -->
+    <div *ngIf="relatedProducts.length > 0" class="related-products mt-5">
+      <h3 class="mb-4">Related Products</h3>
+      <div class="row row-cols-1 row-cols-md-4 g-4">
+        <div class="col" *ngFor="let relatedProduct of relatedProducts">
+          <div class="card h-100 shadow-sm product-card">
+            <div class="product-image-container">
+              <img *ngIf="relatedProduct.imageUrl" [src]="relatedProduct.imageUrl" class="card-img-top product-image" [alt]="relatedProduct.name">
+              <div *ngIf="!relatedProduct.imageUrl" class="placeholder-image d-flex align-items-center justify-content-center">
+                <i class="bi bi-image text-muted"></i>
+              </div>
+            </div>
+            <div class="card-body">
+              <h5 class="card-title product-name">{{ relatedProduct.name }}</h5>
+              <p class="product-price">${{ relatedProduct.price.toFixed(2) }}</p>
+            </div>
+            <div class="card-footer bg-transparent border-top-0">
+              <button class="btn btn-outline-primary btn-sm w-100" [routerLink]="['/products', relatedProduct.productId]">
+                View Details
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
