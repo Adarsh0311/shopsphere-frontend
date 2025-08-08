@@ -1,0 +1,62 @@
+<div class="login-container">
+  <div class="login-card">
+    <h2 class="login-title">Welcome Back</h2>
+    <p class="login-subtitle">Sign in to your account</p>
+
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
+      <!-- username Field -->
+      <div class="form-group">
+        <label for="username" class="form-label">Username</label>
+        <input
+          type="text"
+          id="username"
+          formControlName="username"
+          class="form-input"
+          [class.error]="getFieldError('username')"
+          placeholder="Enter your username"
+        >
+        <div class="error-message" *ngIf="getFieldError('username')">
+          {{ getFieldError('username') }}
+        </div>
+      </div>
+
+      <!-- Password Field -->
+      <div class="form-group">
+        <label for="password" class="form-label">Password</label>
+        <input
+          type="password"
+          id="password"
+          formControlName="password"
+          class="form-input"
+          [class.error]="getFieldError('password')"
+          placeholder="Enter your password"
+        >
+        <div class="error-message" *ngIf="getFieldError('password')">
+          {{ getFieldError('password') }}
+        </div>
+      </div>
+
+      <!-- General Error Message -->
+      <div class="error-message general-error" *ngIf="errorMessage">
+        {{ errorMessage }}
+      </div>
+
+      <!-- Submit Button -->
+      <button
+        type="submit"
+        class="login-button"
+        [disabled]="isLoading"
+      >
+        <span>{{ isLoading ? 'Signing In...' : 'Sign In' }}</span>
+      </button>
+    </form>
+
+    <div class="login-footer">
+      <p>Don't have an account? 
+        <button type="button" class="link-button" (click)="navigateToRegister()">
+          Sign up here
+        </button>
+      </p>
+    </div>
+  </div>
+</div>
