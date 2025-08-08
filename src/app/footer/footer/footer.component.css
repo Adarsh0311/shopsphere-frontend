@@ -1,0 +1,24 @@
+.footer {
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.footer-link {
+  color: #6c757d;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.footer-link:hover {
+  color: #0d6efd;
+  text-decoration: none;
+}
+
+.social-icons a {
+  color: #495057;
+  font-size: 1.2rem;
+  transition: color 0.2s;
+}
+
+.social-icons a:hover {
+  color: #0d6efd;
+}

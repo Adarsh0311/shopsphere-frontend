@@ -4,11 +4,12 @@ import { environment } from '../environments/environment';
 import { RouterModule } from '@angular/router';
 import { LoginComponent } from "./features/auth/login/login.component";
 import { NavbarComponent } from './navbar/navbar/navbar.component';
+import { FooterComponent } from './footer/footer/footer.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, RouterModule, NavbarComponent],
+  imports: [RouterOutlet, RouterModule, NavbarComponent, FooterComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
