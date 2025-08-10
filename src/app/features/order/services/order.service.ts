@@ -1,0 +1,61 @@
+import { Injectable } from '@angular/core';
+import { environment } from '../../../../environments/environment.prod';
+import { OrderRequest } from '../../../models/order-request.model';
+import { OrderResponse, OrderStatus } from '../../../models/order-response.model';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { Observable, tap } from 'rxjs';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class OrderService {
+  private apiUrl = `${environment.apiUrl}/orders`;
+
+   // Store the current order information during checkout process
+  private currentOrderRequest: Partial<OrderRequest> = {};
+  private currentOrderResponse: OrderResponse | null = null;
+
+  constructor(private http: HttpClient) { }
+
+  createOrder(orderRequest: OrderRequest): Observable<OrderResponse> {
+    return this.http.post<OrderResponse>(`${this.apiUrl}/place`, orderRequest).pipe(
+      tap(response => {
+        this.currentOrderResponse = response;
+      })
+    );
+  }
+
+  getUserOrders(): Observable<OrderResponse[]> {
+    return this.http.get<OrderResponse[]>(`${this.apiUrl}`);
+  }
+
+  getOrderById(orderId: string): Observable<OrderResponse> {
+    return this.http.get<OrderResponse>(`${this.apiUrl}/${orderId}`);
+  }
+
+  updateOrderStatus(orderId: string, status: OrderStatus): Observable<OrderResponse> {
+    const params = new HttpParams().set('status', status);
+    return this.http.put<OrderResponse>(`${this.apiUrl}/${orderId}/status`, { params });
+  }
+
+    // Set payment info during checkout
+  setPaymentInfo(paymentInfo: string): void {
+    this.currentOrderRequest.paymentMethod = paymentInfo;
+  }
+
+  // Get current order request (for multi-step checkout)
+  getCurrentOrderRequest(): Partial<OrderRequest> {
+    return this.currentOrderRequest;
+  }
+
+   getCurrentOrderResponse(): OrderResponse | null {
+    return this.currentOrderResponse;
+  }
+
+   clearCheckoutData(): void {
+    this.currentOrderRequest = {};
+    this.currentOrderResponse = null;
+  }
+  
+
+}

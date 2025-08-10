@@ -1,0 +1,121 @@
+<div class="container py-5">
+  <div class="row">
+    <div class="col-12">
+      <h1 class="mb-4">Checkout</h1>
+    </div>
+  </div>
+
+  <!-- Loading Spinner -->
+  <div *ngIf="isLoading" class="text-center py-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+    <p class="mt-3">Loading your cart...</p>
+  </div>
+
+  <!-- Checkout Process -->
+  <div *ngIf="!isLoading && cartData" class="row">
+    <!-- Checkout Steps -->
+    <div class="col-lg-8">
+      <!-- Checkout Progress -->
+      <div class="checkout-progress mb-5">
+        <div class="progress-container">
+          <div class="progress">
+            <div class="progress-bar" role="progressbar" [style.width]="((currentStep-1)/totalSteps*100) + '%'"></div>
+          </div>
+          <div class="step-indicators">
+            <div class="step-item" [class.active]="currentStep >= 1" [class.completed]="currentStep > 1">
+              <div class="step-circle">1</div>
+              <div class="step-label">Shipping</div>
+            </div>
+            <div class="step-item" [class.active]="currentStep >= 2" [class.completed]="currentStep > 2">
+              <div class="step-circle">2</div>
+              <div class="step-label">Payment</div>
+            </div>
+            <div class="step-item" [class.active]="currentStep >= 3">
+              <div class="step-circle">3</div>
+              <div class="step-label">Review</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step Content -->
+      <div [ngSwitch]="currentStep">
+        <!-- Shipping Information -->
+        <!-- <app-checkout-shipping 
+          *ngSwitchCase="1" 
+          (shippingComplete)="onShippingComplete()"
+        ></app-checkout-shipping> -->
+
+        <!-- Payment Information -->
+        <!-- <app-checkout-payment 
+          *ngSwitchCase="2" 
+          (paymentComplete)="onPaymentComplete()"
+          (goBack)="previousStep()"
+        ></app-checkout-payment> -->
+
+        <!-- Order Review -->
+        <!-- <app-checkout-review 
+          *ngSwitchCase="3" 
+          [cartData]="cartData"
+          (orderPlaced)="onOrderPlaced($event)"
+          (goBack)="previousStep()"
+        ></app-checkout-review> -->
+      </div>
+    </div>
+
+    <!-- Order Summary -->
+    <div class="col-lg-4">
+      <div class="card shadow-sm mb-4">
+        <div class="card-header bg-white">
+          <h5 class="mb-0">Order Summary</h5>
+        </div>
+        <div class="card-body">
+          <!-- Cart Items Summary -->
+          <div class="cart-items-summary mb-3">
+            <div *ngFor="let item of cartData.items" class="d-flex justify-content-between mb-2">
+              <div>
+                <span class="badge bg-secondary me-2">{{item.quantity}}</span>
+                <span>{{item.productName}}</span>
+              </div>
+              <span>${{item.itemTotal.toFixed(2)}}</span>
+            </div>
+          </div>
+          
+          <hr>
+          
+          <!-- Totals -->
+          <div class="d-flex justify-content-between mb-2">
+            <span>Subtotal</span>
+            <span>${{cartData.totalAmount.toFixed(2)}}</span>
+          </div>
+          <div class="d-flex justify-content-between mb-2">
+            <span>Shipping</span>
+            <span>
+              <ng-container *ngIf="cartData.totalAmount > 100; else standardShipping">
+                <span class="text-success">Free</span>
+              </ng-container>
+              <ng-template #standardShipping>$10.00</ng-template>
+            </span>
+          </div>
+          <div class="d-flex justify-content-between mb-3">
+            <span>Tax (8%)</span>
+            <span>${{(cartData.totalAmount * 0.08).toFixed(2)}}</span>
+          </div>
+          
+          <hr>
+          
+          <div class="d-flex justify-content-between mb-0 fw-bold">
+            <span>Total</span>
+            <span>${{(
+              cartData.totalAmount + 
+              (cartData.totalAmount > 100 ? 0 : 10) + 
+              (cartData.totalAmount * 0.08)
+            ).toFixed(2)}}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
