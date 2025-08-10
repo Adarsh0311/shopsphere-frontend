@@ -84,11 +84,13 @@ export class CartService {
     this.cartSubject.next(this.cartResponse);
   }
 
-  clearCart(): void {
+  clearCart(): Observable<CartResponse | null> {
     if (this.authService.isLoggedIn()) {
-      this.http.delete<CartResponse>(`${this.apiUrl}/clear`).subscribe({
+       this.http.delete<CartResponse>(`${this.apiUrl}/clear`).subscribe({
         next: (response) => {
           this.cartResponse = response;
+          return of(this.cartResponse);
+
         },
         error: (error) => {
           console.error('Error clearing cart', error);
@@ -100,6 +102,8 @@ export class CartService {
       localStorage.removeItem('cart');
       this.cartSubject.next(this.cartResponse);
     }
+
+    return of(this.cartResponse);
 
   }
 
