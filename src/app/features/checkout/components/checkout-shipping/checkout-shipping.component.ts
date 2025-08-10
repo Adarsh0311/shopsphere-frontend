@@ -40,7 +40,7 @@ export class CheckoutShippingComponent implements OnInit {
       state: ['', [Validators.required]],
       postalCode: ['', [Validators.required, Validators.pattern('^[0-9]{5}(?:-[0-9]{4})?$')]],
       country: [this.countries[0], [Validators.required]],
-      addressType: ['', [Validators.required, Validators.pattern('^(billing|shipping)$')]]
+      //addressType: ['Shipping', [Validators.required, Validators.pattern('^(billing|shipping)$')]]
     });
   }
 

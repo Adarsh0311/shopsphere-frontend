@@ -7,12 +7,13 @@ import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { CartResponse } from '../../../../models/cart-response.model';
 import { CheckoutShippingComponent } from "../checkout-shipping/checkout-shipping.component";
+import { CheckoutPaymentComponent } from "../checkout-payment/checkout-payment.component";
 
 @Component({
   selector: 'app-checkout-page',
   standalone: true,
   imports: [CommonModule,
-    RouterModule, CheckoutShippingComponent],
+    RouterModule, CheckoutShippingComponent, CheckoutPaymentComponent],
   templateUrl: './checkout-page.component.html',
   styleUrl: './checkout-page.component.css'
 })

@@ -5,6 +5,7 @@ import { OrderResponse, OrderStatus } from '../../../models/order-response.model
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
 import { Address } from '../../../models/address.model';
+import { PaymentInfo } from '../../../models/payment-info.model';
 
 @Injectable({
   providedIn: 'root'
@@ -40,8 +41,9 @@ export class OrderService {
   }
 
     // Set payment info during checkout
-  setPaymentInfo(paymentInfo: string): void {
-    this.currentOrderRequest.paymentMethod = paymentInfo;
+  setPaymentInfo(paymentInfo: PaymentInfo): void {
+    this.currentOrderRequest.paymentMethod = paymentInfo.paymentMethod;
+    this.currentOrderRequest.paymentMethodToken = paymentInfo.paymentMethodToken;
   }
 
   // Get current order request (for multi-step checkout)

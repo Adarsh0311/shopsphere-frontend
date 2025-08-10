@@ -6,7 +6,7 @@
     <div class="card-body">
       <form [formGroup]="shippingForm" (ngSubmit)="onSubmit()">
         <!-- Full Name -->
-        <div class="mb-3">
+        <!-- <div class="mb-3">
           <label for="fullName" class="form-label">Full Name</label>
           <input 
             type="text" 
@@ -19,25 +19,25 @@
             <span *ngIf="f['fullName'].errors?.['required']">Full name is required</span>
             <span *ngIf="f['fullName'].errors?.['minlength']">Full name must be at least 3 characters</span>
           </div>
-        </div>
+        </div> -->
         
         <!-- Address Line 1 -->
         <div class="mb-3">
-          <label for="addressLine1" class="form-label">Address Line 1</label>
+          <label for="addressLine1" class="form-label">Street</label>
           <input 
             type="text" 
             class="form-control" 
-            id="addressLine1" 
-            formControlName="addressLine1"
-            [class.is-invalid]="isInvalid('addressLine1')"
+            id="street" 
+            formControlName="street"
+            [class.is-invalid]="isInvalid('street')"
           >
-          <div class="invalid-feedback" *ngIf="isInvalid('addressLine1')">
-            Address is required
+          <div class="invalid-feedback" *ngIf="isInvalid('street')">
+            Street is required
           </div>
         </div>
         
         <!-- Address Line 2 -->
-        <div class="mb-3">
+        <!-- <div class="mb-3">
           <label for="addressLine2" class="form-label">Address Line 2 (Optional)</label>
           <input 
             type="text" 
@@ -45,7 +45,7 @@
             id="addressLine2" 
             formControlName="addressLine2"
           >
-        </div>
+        </div> -->
         
         <!-- City, State, Zip Row -->
         <div class="row g-3 mb-3">
@@ -110,7 +110,7 @@
         </div>
         
         <!-- Phone Number -->
-        <div class="mb-4">
+        <!-- <div class="mb-4">
           <label for="phoneNumber" class="form-label">Phone Number</label>
           <input 
             type="tel" 
@@ -124,7 +124,7 @@
             <span *ngIf="f['phoneNumber'].errors?.['required']">Phone number is required</span>
             <span *ngIf="f['phoneNumber'].errors?.['pattern']">Please enter a valid 10-digit phone number</span>
           </div>
-        </div>
+        </div> -->
         
         <!-- Submit Button -->
         <div class="d-grid">

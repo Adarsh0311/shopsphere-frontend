@@ -1,0 +1,116 @@
+<div class="payment-form-container">
+  <div class="card shadow-sm">
+    <div class="card-header bg-white">
+      <h5 class="mb-0">Payment Information</h5>
+    </div>
+    <div class="card-body">
+      <form [formGroup]="paymentForm" (ngSubmit)="onSubmit()">
+        <!-- Card Number -->
+        <div class="mb-3">
+          <label for="cardNumber" class="form-label">Card Number</label>
+          <input 
+            type="text" 
+            class="form-control" 
+            id="cardNumber" 
+            formControlName="cardNumber"
+            placeholder="1234567890123456"
+            maxlength="16"
+            (input)="formatCardNumber($event)"
+            [class.is-invalid]="isInvalid('cardNumber')"
+          >
+          <div class="invalid-feedback" *ngIf="isInvalid('cardNumber')">
+            <span *ngIf="f['cardNumber'].errors?.['required']">Card number is required</span>
+            <span *ngIf="f['cardNumber'].errors?.['pattern']">Please enter a valid 16-digit card number</span>
+          </div>
+        </div>
+        
+        <!-- Name on Card -->
+        <div class="mb-3">
+          <label for="nameOnCard" class="form-label">Name on Card</label>
+          <input 
+            type="text" 
+            class="form-control" 
+            id="nameOnCard" 
+            formControlName="nameOnCard"
+            [class.is-invalid]="isInvalid('nameOnCard')"
+          >
+          <div class="invalid-feedback" *ngIf="isInvalid('nameOnCard')">
+            <span *ngIf="f['nameOnCard'].errors?.['required']">Name on card is required</span>
+            <span *ngIf="f['nameOnCard'].errors?.['minlength']">Name must be at least 3 characters</span>
+          </div>
+        </div>
+        
+        <!-- Expiry and CVV Row -->
+        <div class="row g-3 mb-3">
+          <div class="col-md-6">
+            <label for="expiryDate" class="form-label">Expiry Date</label>
+            <input 
+              type="text" 
+              class="form-control" 
+              id="expiryDate" 
+              formControlName="expiryDate"
+              placeholder="MM/YY"
+              maxlength="5"
+              (input)="formatExpiryDate($event)"
+              [class.is-invalid]="isInvalid('expiryDate')"
+            >
+            <div class="invalid-feedback" *ngIf="isInvalid('expiryDate')">
+              <span *ngIf="f['expiryDate'].errors?.['required']">Expiry date is required</span>
+              <span *ngIf="f['expiryDate'].errors?.['pattern']">Please enter a valid expiry date (MM/YY)</span>
+            </div>
+          </div>
+          
+          <div class="col-md-6">
+            <label for="cvv" class="form-label">CVV</label>
+            <input 
+              type="password" 
+              class="form-control" 
+              id="cvv" 
+              formControlName="cvv"
+              maxlength="4"
+              [class.is-invalid]="isInvalid('cvv')"
+            >
+            <div class="invalid-feedback" *ngIf="isInvalid('cvv')">
+              <span *ngIf="f['cvv'].errors?.['required']">CVV is required</span>
+              <span *ngIf="f['cvv'].errors?.['pattern']">Please enter a valid CVV (3-4 digits)</span>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Billing Address Option -->
+        <div class="mb-4 form-check">
+          <input 
+            type="checkbox" 
+            class="form-check-input" 
+            id="billingAddressSameAsShipping" 
+            formControlName="billingAddressSameAsShipping"
+          >
+          <label class="form-check-label" for="billingAddressSameAsShipping">
+            Billing address is the same as shipping address
+          </label>
+        </div>
+        
+        <!-- Payment Security Notice -->
+        <div class="payment-security-notice mb-4">
+          <div class="d-flex align-items-center mb-2">
+            <i class="bi bi-shield-lock-fill text-success me-2"></i>
+            <span class="fw-semibold">Secure Payment</span>
+          </div>
+          <p class="text-muted small mb-0">
+            Your payment information is encrypted and processed securely. We do not store your full card details.
+          </p>
+        </div>
+        
+        <!-- Navigation Buttons -->
+        <div class="d-flex justify-content-between">
+          <button type="button" class="btn btn-outline-secondary" (click)="onBack()">
+            <i class="bi bi-arrow-left me-2"></i> Back to Shipping
+          </button>
+          <button type="submit" class="btn btn-primary">
+            Review Order <i class="bi bi-arrow-right ms-2"></i>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

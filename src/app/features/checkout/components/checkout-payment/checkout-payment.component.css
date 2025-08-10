@@ -1,0 +1,11 @@
+.payment-security-notice {
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  padding: 16px;
+  border-left: 4px solid #198754;
+}
+
+.card-security-icons {
+  font-size: 1.8rem;
+  color: #6c757d;
+}
