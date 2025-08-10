@@ -2,7 +2,7 @@ import { User } from "./user.model";
 
 export interface Address {
   addressId: string;
-  user?: User; // Optional due to potential null value in relationship
+  user?: User;
   street: string;
   city: string;
   state: string;

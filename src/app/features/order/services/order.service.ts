@@ -4,6 +4,7 @@ import { OrderRequest } from '../../../models/order-request.model';
 import { OrderResponse, OrderStatus } from '../../../models/order-response.model';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
+import { Address } from '../../../models/address.model';
 
 @Injectable({
   providedIn: 'root'
@@ -56,6 +57,12 @@ export class OrderService {
     this.currentOrderRequest = {};
     this.currentOrderResponse = null;
   }
-  
+
+  setShippingAddress(address: Address): void {
+    this.currentOrderRequest.city = address.city;
+    this.currentOrderRequest.state = address.state;
+    this.currentOrderRequest.postalCode = address.postalCode;
+    this.currentOrderRequest.country = address.country;
+  }
 
 }

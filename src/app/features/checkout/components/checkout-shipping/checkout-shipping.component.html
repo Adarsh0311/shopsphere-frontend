@@ -1,0 +1,136 @@
+<div class="shipping-form-container">
+  <div class="card shadow-sm">
+    <div class="card-header bg-white">
+      <h5 class="mb-0">Shipping Information</h5>
+    </div>
+    <div class="card-body">
+      <form [formGroup]="shippingForm" (ngSubmit)="onSubmit()">
+        <!-- Full Name -->
+        <div class="mb-3">
+          <label for="fullName" class="form-label">Full Name</label>
+          <input 
+            type="text" 
+            class="form-control" 
+            id="fullName" 
+            formControlName="fullName"
+            [class.is-invalid]="isInvalid('fullName')"
+          >
+          <div class="invalid-feedback" *ngIf="isInvalid('fullName')">
+            <span *ngIf="f['fullName'].errors?.['required']">Full name is required</span>
+            <span *ngIf="f['fullName'].errors?.['minlength']">Full name must be at least 3 characters</span>
+          </div>
+        </div>
+        
+        <!-- Address Line 1 -->
+        <div class="mb-3">
+          <label for="addressLine1" class="form-label">Address Line 1</label>
+          <input 
+            type="text" 
+            class="form-control" 
+            id="addressLine1" 
+            formControlName="addressLine1"
+            [class.is-invalid]="isInvalid('addressLine1')"
+          >
+          <div class="invalid-feedback" *ngIf="isInvalid('addressLine1')">
+            Address is required
+          </div>
+        </div>
+        
+        <!-- Address Line 2 -->
+        <div class="mb-3">
+          <label for="addressLine2" class="form-label">Address Line 2 (Optional)</label>
+          <input 
+            type="text" 
+            class="form-control" 
+            id="addressLine2" 
+            formControlName="addressLine2"
+          >
+        </div>
+        
+        <!-- City, State, Zip Row -->
+        <div class="row g-3 mb-3">
+          <div class="col-md-5">
+            <label for="city" class="form-label">City</label>
+            <input 
+              type="text" 
+              class="form-control" 
+              id="city" 
+              formControlName="city"
+              [class.is-invalid]="isInvalid('city')"
+            >
+            <div class="invalid-feedback" *ngIf="isInvalid('city')">
+              City is required
+            </div>
+          </div>
+          
+          <div class="col-md-4">
+            <label for="state" class="form-label">State</label>
+            <input 
+              type="text" 
+              class="form-control" 
+              id="state" 
+              formControlName="state"
+              [class.is-invalid]="isInvalid('state')"
+            >
+            <div class="invalid-feedback" *ngIf="isInvalid('state')">
+              State is required
+            </div>
+          </div>
+          
+          <div class="col-md-3">
+            <label for="postalCode" class="form-label">Zip Code</label>
+            <input 
+              type="text" 
+              class="form-control" 
+              id="postalCode" 
+              formControlName="postalCode"
+              [class.is-invalid]="isInvalid('postalCode')"
+            >
+            <div class="invalid-feedback" *ngIf="isInvalid('postalCode')">
+              <span *ngIf="f['postalCode'].errors?.['required']">Zip code is required</span>
+              <span *ngIf="f['postalCode'].errors?.['pattern']">Please enter a valid zip code</span>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Country -->
+        <div class="mb-3">
+          <label for="country" class="form-label">Country</label>
+          <select 
+            class="form-select" 
+            id="country" 
+            formControlName="country"
+            [class.is-invalid]="isInvalid('country')"
+          >
+            <option *ngFor="let country of countries" [value]="country">{{country}}</option>
+          </select>
+          <div class="invalid-feedback" *ngIf="isInvalid('country')">
+            Country is required
+          </div>
+        </div>
+        
+        <!-- Phone Number -->
+        <div class="mb-4">
+          <label for="phoneNumber" class="form-label">Phone Number</label>
+          <input 
+            type="tel" 
+            class="form-control" 
+            id="phoneNumber" 
+            formControlName="phoneNumber"
+            placeholder="1234567890"
+            [class.is-invalid]="isInvalid('phoneNumber')"
+          >
+          <div class="invalid-feedback" *ngIf="isInvalid('phoneNumber')">
+            <span *ngIf="f['phoneNumber'].errors?.['required']">Phone number is required</span>
+            <span *ngIf="f['phoneNumber'].errors?.['pattern']">Please enter a valid 10-digit phone number</span>
+          </div>
+        </div>
+        
+        <!-- Submit Button -->
+        <div class="d-grid">
+          <button type="submit" class="btn btn-primary">Continue to Payment</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
