@@ -100,9 +100,9 @@ export class CartService {
     else {
       this.cartResponse = null;
       localStorage.removeItem('cart');
-      this.cartSubject.next(this.cartResponse);
     }
 
+    this.cartSubject.next(this.cartResponse);
     return of(this.cartResponse);
 
   }

@@ -28,10 +28,13 @@ export class CheckoutPaymentComponent implements OnInit {
 
      // Pre-fill form if payment info exists in order service
     const currentOrder = this.orderService.getCurrentOrderRequest();
-    if (currentOrder.paymentMethod) {
+    if (currentOrder.paymentInfo) {
       this.paymentForm.patchValue({
-        paymentMethod: currentOrder.paymentMethod,
-        paymentMethodToken: currentOrder.paymentMethodToken
+        cardNumber: currentOrder.paymentInfo?.cardNumber || '',
+        nameOnCard: currentOrder.paymentInfo?.nameOnCard || '',
+        expiryDate: currentOrder.paymentInfo?.expiryDate || '',
+        cvv: currentOrder.paymentInfo?.cvv || '',
+        billingAddressSameAsShipping: currentOrder.paymentInfo?.billingAddressSameAsShipping || false
       });
     }
   }

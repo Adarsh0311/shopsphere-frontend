@@ -42,8 +42,22 @@ export class OrderService {
 
     // Set payment info during checkout
   setPaymentInfo(paymentInfo: PaymentInfo): void {
-    this.currentOrderRequest.paymentMethod = paymentInfo.paymentMethod;
-    this.currentOrderRequest.paymentMethodToken = paymentInfo.paymentMethodToken;
+    if (!this.currentOrderRequest.paymentInfo) {
+      this.currentOrderRequest.paymentInfo = {
+        cardNumber: '',
+        nameOnCard: '',
+        expiryDate: '',
+        cvv: '',
+        billingAddressSameAsShipping: false,
+        paymentMethod: '',
+        paymentMethodToken: ''
+      };
+    }
+    this.currentOrderRequest.paymentInfo.cardNumber = paymentInfo.cardNumber;
+    this.currentOrderRequest.paymentInfo.nameOnCard = paymentInfo.nameOnCard;
+    this.currentOrderRequest.paymentInfo.expiryDate = paymentInfo.expiryDate;
+    this.currentOrderRequest.paymentInfo.cvv = paymentInfo.cvv;
+    this.currentOrderRequest.paymentInfo.billingAddressSameAsShipping = paymentInfo.billingAddressSameAsShipping;
   }
 
   // Get current order request (for multi-step checkout)
@@ -61,6 +75,7 @@ export class OrderService {
   }
 
   setShippingAddress(address: Address): void {
+    this.currentOrderRequest.street = address.street;
     this.currentOrderRequest.city = address.city;
     this.currentOrderRequest.state = address.state;
     this.currentOrderRequest.postalCode = address.postalCode;

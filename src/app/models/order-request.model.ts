@@ -1,3 +1,5 @@
+import { PaymentInfo } from "./payment-info.model";
+
     export interface OrderRequest {
         street: string;
         city: string;
@@ -6,5 +8,7 @@
         country: string;
 
         paymentMethod: string;
-        paymentMethodToken: string; 
+        paymentMethodToken: string;
+        orderNotes: string;
+        paymentInfo: PaymentInfo;
     }

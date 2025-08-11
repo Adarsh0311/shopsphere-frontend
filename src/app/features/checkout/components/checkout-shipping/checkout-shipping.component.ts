@@ -30,6 +30,16 @@ export class CheckoutShippingComponent implements OnInit {
     
     // Pre-fill form if shipping address exists in order service
     const currentOrder = this.orderService.getCurrentOrderRequest();
+    if (currentOrder) {
+      this.shippingForm.patchValue({
+        street: currentOrder?.street || '',
+        city: currentOrder?.city || '',
+        state: currentOrder?.state || '',
+        postalCode: currentOrder?.postalCode || '',
+        country: currentOrder?.country || COUNTRIES[0],
+        //addressType: currentOrder.shippingAddress?.addressType || 'Shipping'
+      });
+    }
     
   }
 
@@ -39,7 +49,7 @@ export class CheckoutShippingComponent implements OnInit {
       city: ['', [Validators.required]],
       state: ['', [Validators.required]],
       postalCode: ['', [Validators.required, Validators.pattern('^[0-9]{5}(?:-[0-9]{4})?$')]],
-      country: [this.countries[0], [Validators.required]],
+      country: [COUNTRIES[0], [Validators.required]],
       //addressType: ['Shipping', [Validators.required, Validators.pattern('^(billing|shipping)$')]]
     });
   }
