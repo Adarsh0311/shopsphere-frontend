@@ -16,6 +16,9 @@ export class CheckoutConfirmationComponent implements OnInit {
   orderDetails: OrderResponse | null = null;
   isLoading: boolean = true;
   error: string | null = null;
+  taxRate: number = 0.08;
+  taxAmount: number = 0;
+  amountBeforeTax: number = 0;
 
    constructor(
     private route: ActivatedRoute,
@@ -40,6 +43,14 @@ export class CheckoutConfirmationComponent implements OnInit {
       } else {
         this.loadOrderDetails();
       }
+
+      // total amount included 8% tax, so first take the amount before 8% tax
+      if (this.orderDetails) {
+        this.amountBeforeTax = this.orderDetails.totalAmount / (1 + this.taxRate);
+        this.taxAmount = this.amountBeforeTax * this.taxRate;
+      }
+
+
   }
 
   loadOrderDetails(): void {

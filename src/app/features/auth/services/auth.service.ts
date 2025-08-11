@@ -106,8 +106,50 @@ export class AuthService {
   }
 
   isLoggedIn(): boolean {
-    return !!this.currentUserSubject.value && !!this.currentUserSubject.value.accessToken;
+    const currentUser = this.currentUserSubject.value;
+    if (!currentUser || !currentUser.accessToken) {
+      return false;
+    }
+
+    //checking token expiry
+    if (this.isTokenExpired(currentUser.accessToken)) {
+      this.logout();
+      return false;
+    }
+    
+    return true;
   }
+
+  /**
+ * Check if JWT token is expired by decoding it and checking the exp claim
+ */
+private isTokenExpired(token: string): boolean {
+  try {
+
+    const tokenParts = token.split('.');
+    if (tokenParts.length !== 3) {
+      return true; // Invalid token format
+    }
+    
+    // Decode the payload
+    const payload = JSON.parse(atob(tokenParts[1]));
+    
+    // Check if token has expiration claim
+    if (!payload.exp) {
+      return false; // No expiration, consider it valid
+    }
+    
+    // exp is in seconds, Date.now() is in milliseconds
+    const expirationTime = payload.exp * 1000;
+    const currentTime = Date.now();
+    
+    // Return true if token is expired
+    return currentTime > expirationTime;
+  } catch (error) {
+    console.error('Error parsing token:', error);
+    return true; // Consider invalid if there's an error
+  }
+}
 
   private handleError = (error: any) => {
     let errorMessage = 'An error occurred';

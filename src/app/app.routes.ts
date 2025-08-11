@@ -1,7 +1,7 @@
 import { Routes } from '@angular/router';
 import { LoginComponent } from './features/auth/login/login.component';
 import { RegisterComponent } from './features/auth/register/register.component';
-//import { AuthGuard } from './features/auth/guards/auth.guard';
+import { AuthGuard } from './core/guards/auth.guard';
 
 export const routes: Routes = [
     { path: '', redirectTo: '/categories', pathMatch: 'full' },
@@ -12,7 +12,14 @@ export const routes: Routes = [
     { path: 'products/:productId', loadComponent: () => import('./features/products/components/product-detail/product-detail.component').then(m => m.ProductDetailComponent), title: 'Product Details' },
     { path: 'cart', loadComponent: () => import('./features/cart/components/cart-page/cart-page.component').then(m => m.CartPageComponent), title: 'Shopping Cart' },
     { path: 'checkout', 
-        //canActivate: [AuthGuard],
+        canActivate: [AuthGuard],
         loadComponent: () => import('./features/checkout/components/checkout-page/checkout-page.component').then(m => m.CheckoutPageComponent), 
-        title: 'Checkout' }
+        title: 'Checkout' 
+    },
+        { 
+      path: 'checkout/confirmation/:orderId', 
+      canActivate: [AuthGuard],
+      loadComponent: () => import('./features/checkout/components/checkout-confirmation/checkout-confirmation.component').then(m => m.CheckoutConfirmationComponent), 
+      title: 'Order Confirmation' 
+    }
 ];

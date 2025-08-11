@@ -32,7 +32,7 @@ export class CheckoutReviewComponent implements OnInit{
   }
 
   get shippingCost(): number {
-    return this.subtotal > 0 ? 100 : 0;
+    return this.subtotal >= 35 ? 0 : 10;
   }
 
   get tax(): number {
@@ -40,7 +40,8 @@ export class CheckoutReviewComponent implements OnInit{
   }
 
   get stateTaxRate(): number {
-    return this.shippingAddress ? STATE_TAXES[this.shippingAddress.state as keyof typeof STATE_TAXES] || 0 : 0;
+    return 0.08;
+    //return this.shippingAddress ? STATE_TAXES[this.shippingAddress.state as keyof typeof STATE_TAXES] || 0 : 0;
   }
 
   get total(): number {

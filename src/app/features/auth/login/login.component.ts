@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { LoginRequest } from '../../../models/login-request.model';
 import { AuthService } from '../services/auth.service';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { CartService } from '../../cart/services/cart.service';
@@ -18,12 +18,14 @@ export class LoginComponent implements OnInit{
   loginForm!: FormGroup;
   isLoading = false;
   errorMessage = '';
+  returnUrl: string = '/';
 
   constructor(
     private authService: AuthService,
     private router: Router,
     private fb: FormBuilder,
-    private cartService: CartService
+    private cartService: CartService,
+    private route: ActivatedRoute
   ) {
   }
 
@@ -32,6 +34,8 @@ export class LoginComponent implements OnInit{
       username: ['', [Validators.required]],
       password: ['', [Validators.required]]
     });
+
+    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
   }
 
 
@@ -51,6 +55,8 @@ export class LoginComponent implements OnInit{
           //this.router.navigate(['/products']);
           alert('Login successful!');
           this.cartService.mergeCartsOnLogin().subscribe();
+
+          this.router.navigateByUrl(this.returnUrl);
         },
         error: (error) => {
           this.isLoading = false;
