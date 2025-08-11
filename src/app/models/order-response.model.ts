@@ -47,4 +47,6 @@ export interface OrderResponse {
   paymentDate: Date;
   
   items: OrderItemResponse[];
+
+  estimatedDelivery: Date;
 }

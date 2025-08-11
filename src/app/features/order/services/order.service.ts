@@ -23,6 +23,7 @@ export class OrderService {
     return this.http.post<OrderResponse>(`${this.apiUrl}/place`, orderRequest).pipe(
       tap(response => {
         this.currentOrderResponse = response;
+        this.setEstimatedDeliveryDate(response);
       })
     );
   }
@@ -81,5 +82,15 @@ export class OrderService {
     this.currentOrderRequest.postalCode = address.postalCode;
     this.currentOrderRequest.country = address.country;
   }
+
+
+setEstimatedDeliveryDate(order: OrderResponse): OrderResponse {
+  if (order.orderDate) {
+    const estimatedDate = new Date(order.orderDate);
+    estimatedDate.setDate(estimatedDate.getDate() + 7);
+    order.estimatedDelivery = estimatedDate;
+  }
+  return order;
+}
 
 }
