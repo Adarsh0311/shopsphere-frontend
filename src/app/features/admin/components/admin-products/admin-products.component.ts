@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { AdminService } from '../../services/admin.service';
 import { ProductResponse } from '../../../../models/product-response.model';
 import { ProductCreateRequest, ProductUpdateRequest } from '../../../../models/admin.model';
+import { CategoryService } from '../../../category/services/category.service';
 
 @Component({
   selector: 'app-admin-products',
@@ -46,6 +47,16 @@ import { ProductCreateRequest, ProductUpdateRequest } from '../../../../models/a
               <label>Product Name</label>
               <input type="text" [(ngModel)]="productForm.name" name="name" required class="form-control">
             </div>
+
+            <div class="form-group">
+              <label>Category</label>
+              <select [(ngModel)]="productForm.categoryId" name="categoryId" class="form-select" required>
+                <option *ngFor="let category of categories" [value]="category.categoryId">
+                  {{ category.name }}
+                </option>
+              </select>
+            </div>
+
             
             <div class="form-group">
               <label>Description</label>
@@ -78,6 +89,7 @@ export class AdminProductsComponent implements OnInit {
   isLoading = true;
   showProductModal = false;
   isEditMode = false;
+  categories: any;
   
   productForm: ProductCreateRequest = {
     name: '',
@@ -87,10 +99,23 @@ export class AdminProductsComponent implements OnInit {
     categoryId: ''
   };
 
-  constructor(private adminService: AdminService) {}
+  constructor(private adminService: AdminService, private categoryService: CategoryService) {}
 
   ngOnInit(): void {
     this.loadProducts();
+    this.loadCategories();
+    
+  }
+
+  loadCategories(): void {
+    this.categoryService.getAllCategories().subscribe({
+      next: (data) => {
+        this.categories = data;
+      }, 
+      error: (error) => {
+        console.error('Error in loading categories: ', error);
+      }
+    });
   }
 
   loadProducts(): void {
@@ -150,6 +175,7 @@ export class AdminProductsComponent implements OnInit {
           this.closeProductModal();
         },
         error: (error) => {
+          alert(error.message || 'Failed to create product');
           console.error('Error creating product:', error);
         }
       });
