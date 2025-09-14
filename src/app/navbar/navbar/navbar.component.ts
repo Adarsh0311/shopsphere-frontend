@@ -16,6 +16,7 @@ export class NavbarComponent implements OnInit {
   cartItemCount: number = 0;
   searchQuery: string = '';
   isLoggedIn: boolean = false;
+  isAdmin: boolean = false;
   isMenuOpen: boolean = false;
   totalAmount: number = 0;
 
@@ -35,9 +36,18 @@ export class NavbarComponent implements OnInit {
     });
 
     // Subscribe to auth state
-    if (this.authService.isLoggedIn()) {
-      this.isLoggedIn = true;
-    }
+    this.checkAuthState();
+    
+    // Subscribe to auth state changes
+    this.authService.currentUser$.subscribe(user => {
+      this.isLoggedIn = !!user;
+      this.isAdmin = user?.role === 'ROLE_ADMIN';
+    });
+  }
+
+  private checkAuthState(): void {
+    this.isLoggedIn = this.authService.isLoggedIn();
+    this.isAdmin = this.authService.isAdmin();
   }
 
 

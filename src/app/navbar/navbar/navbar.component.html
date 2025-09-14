@@ -66,6 +66,13 @@
           <ul class="dropdown-menu dropdown-menu-end">
             <li><a class="dropdown-item" routerLink="/profile">My Profile</a></li>
             <li><a class="dropdown-item" routerLink="/orders">My Orders</a></li>
+            <li *ngIf="isAdmin"><hr class="dropdown-divider"></li>
+            <li *ngIf="isAdmin">
+              <a class="dropdown-item admin-link" routerLink="/admin/dashboard">
+                <i class="bi bi-shield-check"></i>
+                Admin Portal
+              </a>
+            </li>
             <li><hr class="dropdown-divider"></li>
             <li><a class="dropdown-item" href="#" (click)="logout(); $event.preventDefault()">Logout</a></li>
           </ul>

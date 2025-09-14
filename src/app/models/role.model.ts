@@ -1,5 +1,15 @@
 export interface Role {
     roleId: string;
     name: string;
-    // Add other fields as needed
+    description?: string;
 }
+
+export enum UserRole {
+    USER = 'ROLE_USER',
+    ADMIN = 'ROLE_ADMIN'
+};
+
+export const ROLE_NAMES = {
+    USER: 'User',
+    ADMIN: 'Administrator'
+} as const;

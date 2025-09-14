@@ -1,0 +1,101 @@
+<div class="admin-login-wrapper">
+  <div class="admin-login-container">
+    <div class="admin-login-card">
+      <!-- Admin Branding -->
+      <div class="admin-header">
+        <div class="admin-logo">
+          <i class="fas fa-shield-alt"></i>
+        </div>
+        <h2>Admin Portal</h2>
+        <p class="subtitle">Secure Administrative Access</p>
+      </div>
+
+      <!-- Security Notice -->
+      <div class="security-notice">
+        <i class="fas fa-info-circle"></i>
+        <small>This is a secure admin portal. All actions are monitored and logged.</small>
+      </div>
+
+      <!-- Login Form -->
+      <form (ngSubmit)="onAdminLogin()" #adminForm="ngForm" class="admin-form">
+        <div class="form-group">
+          <label for="username">
+            <i class="fas fa-user"></i>
+            Admin Username
+          </label>
+          <input 
+            type="text" 
+            id="username"
+            name="username"
+            [(ngModel)]="adminCredentials.username"
+            class="form-control"
+            placeholder="Enter admin username"
+            required
+            autocomplete="username"
+            [disabled]="isLoading">
+        </div>
+
+        <div class="form-group">
+          <label for="password">
+            <i class="fas fa-lock"></i>
+            Admin Password
+          </label>
+          <div class="password-input-container">
+            <input 
+              [type]="showPassword ? 'text' : 'password'"
+              id="password"
+              name="password"
+              [(ngModel)]="adminCredentials.password"
+              class="form-control"
+              placeholder="Enter admin password"
+              required
+              autocomplete="current-password"
+              [disabled]="isLoading">
+            <button 
+              type="button" 
+              class="password-toggle"
+              (click)="togglePasswordVisibility()"
+              [disabled]="isLoading">
+              <i [class]="showPassword ? 'fas fa-eye-slash' : 'fas fa-eye'"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Error Message -->
+        <div *ngIf="errorMessage" class="error-message">
+          <i class="fas fa-exclamation-triangle"></i>
+          {{ errorMessage }}
+        </div>
+
+        <!-- Submit Button -->
+        <button 
+          type="submit" 
+          class="admin-login-btn"
+          [disabled]="!adminForm.valid || isLoading">
+          <span *ngIf="isLoading" class="spinner"></span>
+          <i *ngIf="!isLoading" class="fas fa-sign-in-alt"></i>
+          {{ isLoading ? 'Authenticating...' : 'Access Admin Panel' }}
+        </button>
+      </form>
+
+      <!-- Footer Links -->
+      <div class="admin-footer">
+        <button 
+          type="button" 
+          class="back-link"
+          (click)="onBackToUserLogin()"
+          [disabled]="isLoading">
+          <i class="fas fa-arrow-left"></i>
+          Back to Customer Login
+        </button>
+      </div>
+    </div>
+
+    <!-- Background Elements -->
+    <div class="admin-bg-elements">
+      <div class="bg-circle bg-circle-1"></div>
+      <div class="bg-circle bg-circle-2"></div>
+      <div class="bg-circle bg-circle-3"></div>
+    </div>
+  </div>
+</div>

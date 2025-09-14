@@ -52,11 +52,15 @@ export class LoginComponent implements OnInit{
       this.authService.login(loginRequest).subscribe({
         next: (response) => {
           this.isLoading = false;
-          //this.router.navigate(['/products']);
           alert('Login successful!');
           this.cartService.mergeCartsOnLogin().subscribe();
 
-          this.router.navigateByUrl(this.returnUrl);
+          // Route based on user role
+          if (response.role === 'ROLE_ADMIN') {
+            this.router.navigate(['/admin/dashboard']);
+          } else {
+            this.router.navigateByUrl(this.returnUrl);
+          }
         },
         error: (error) => {
           this.isLoading = false;

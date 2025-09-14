@@ -7,6 +7,7 @@ import { JwtAuthResponse } from '../../../models/jwt-auth-response.model';
 import { LoginRequest } from '../../../models/login-request.model';
 import { RegisterRequest } from '../../../models/register-request.model';
 import { User } from '../../../models/user.model';
+import { UserRole } from '../../../models/role.model';
 import { CartService } from '../../cart/services/cart.service';
 
 @Injectable({
@@ -21,6 +22,9 @@ export class AuthService {
   private currentUserSubject = new BehaviorSubject<JwtAuthResponse | null> (
     this.getCurrentUserFromStorage()
   );
+
+  // Public observable for components to subscribe to auth state changes
+  public currentUser$ = this.currentUserSubject.asObservable();
 
   constructor(
     private http: HttpClient,
@@ -82,6 +86,44 @@ export class AuthService {
 
   getCurrentUser(): JwtAuthResponse | null {
     return this.currentUserSubject.value;
+  }
+
+  /**
+   * Check if current user has specific role
+   */
+  hasRole(role: UserRole): boolean {
+    const currentUser = this.getCurrentUser();
+    if (!currentUser || !currentUser.role) {
+      return false;
+    }
+
+    return currentUser.role === role;
+  }
+
+  /**
+   * Check if current user is admin
+   */
+  isAdmin(): boolean {
+    return this.hasRole(UserRole.ADMIN);
+  }
+
+  /**
+   * Check if current session is an admin session
+   */
+  isAdminSession(): boolean {
+    return this.isAdmin();
+  }
+
+  /**
+   * Get current user's role as string
+   */
+  getUserRole(): string {
+    const currentUser = this.getCurrentUser();
+    if (!currentUser || !currentUser.role) {
+      return '';
+    }
+
+    return currentUser.role;
   }
 
 

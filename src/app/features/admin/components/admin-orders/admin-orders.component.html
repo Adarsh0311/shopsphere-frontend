@@ -1,0 +1,240 @@
+<div class="admin-orders">
+  <!-- Header -->
+  <div class="page-header">
+    <h1>Order Management</h1>
+    <div class="header-actions">
+      <button class="refresh-btn" (click)="loadOrders()">
+        <i class="fas fa-sync-alt"></i>
+        Refresh
+      </button>
+    </div>
+  </div>
+
+  <!-- Search and Filters -->
+  <div class="filters-section">
+    <div class="search-bar">
+      <div class="search-input-group">
+        <i class="fas fa-search"></i>
+        <input 
+          type="text" 
+          placeholder="Search orders by ID, customer name..."
+          [(ngModel)]="searchQuery"
+          (keyup.enter)="onSearch()"
+          class="search-input">
+        <button class="search-btn" (click)="onSearch()">Search</button>
+      </div>
+    </div>
+
+    <div class="filter-controls">
+      <select [(ngModel)]="selectedStatus" (change)="onStatusFilter()" class="status-filter">
+        <option value="">All Statuses</option>
+        <option *ngFor="let status of orderStatuses" [value]="status">{{ status }}</option>
+      </select>
+
+      <button class="clear-btn" (click)="clearSearch()">
+        <i class="fas fa-times"></i>
+        Clear
+      </button>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="loading-container">
+    <div class="spinner"></div>
+    <p>Loading orders...</p>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="errorMessage && !isLoading" class="error-container">
+    <i class="fas fa-exclamation-triangle"></i>
+    <h3>Error Loading Orders</h3>
+    <p>{{ errorMessage }}</p>
+    <button class="retry-btn" (click)="loadOrders()">Try Again</button>
+  </div>
+
+  <!-- Orders Table -->
+  <div *ngIf="!isLoading && !errorMessage" class="orders-container">
+    <div class="orders-table-wrapper">
+      <table class="orders-table">
+        <thead>
+          <tr>
+            <th>Order ID</th>
+            <th>Customer</th>
+            <th>Date</th>
+            <th>Items</th>
+            <th>Total</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let order of orders" class="order-row">
+            <td class="order-id">#{{ order.orderId.substring(0, 8) }}...</td>
+            <td class="customer-info">
+              <div class="customer-name">{{ order.username }}</div>
+            </td>
+            <td class="order-date">{{ formatDate(order.orderDate) }}</td>
+            <td class="item-count">{{ getItemCount(order) }} items</td>
+            <td class="total-amount">${{ getTotalAmount(order) | number:'1.2-2' }}</td>
+            <td class="order-status">
+              <span class="status-badge" [ngClass]="getStatusClass(order.status)">
+                {{ order.status }}
+              </span>
+            </td>
+            <td class="actions">
+              <button class="view-btn" (click)="viewOrderDetails(order)">
+                <i class="fas fa-eye"></i>
+                View
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- Empty State -->
+      <div *ngIf="orders.length === 0" class="empty-state">
+        <i class="fas fa-inbox"></i>
+        <h3>No Orders Found</h3>
+        <p>There are no orders matching your criteria.</p>
+      </div>
+    </div>
+
+    <!-- Pagination -->
+    <div *ngIf="totalPages > 1" class="pagination">
+      <button class="page-btn" (click)="previousPage()" [disabled]="currentPage === 0">
+        <i class="fas fa-chevron-left"></i>
+      </button>
+
+      <span class="page-info">
+        Page {{ currentPage + 1 }} of {{ totalPages }}
+      </span>
+
+      <button class="page-btn" (click)="nextPage()" [disabled]="currentPage >= totalPages - 1">
+        <i class="fas fa-chevron-right"></i>
+      </button>
+
+      <span class="total-info">
+        Total: {{ totalElements }} orders
+      </span>
+    </div>
+  </div>
+
+  <!-- Order Details Modal -->
+  <div *ngIf="showOrderDetails && selectedOrder" class="modal-overlay" (click)="closeOrderDetails()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2>Order Details - #{{ selectedOrder.orderId.substring(0, 8) }}...</h2>
+        <button class="close-btn" (click)="closeOrderDetails()">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <!-- Customer Information -->
+        <div class="info-section">
+          <h3>Customer Information</h3>
+          <div class="info-grid">
+            <div class="info-item">
+              <label>Customer:</label>
+              <span>{{ selectedOrder.username }}</span>
+            </div>
+            <div class="info-item">
+              <label>Order Date:</label>
+              <span>{{ formatDate(selectedOrder.orderDate) }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Shipping Address -->
+        <div class="info-section">
+          <h3>Shipping Address</h3>
+          <div class="address">
+            <p>{{ selectedOrder.shippingStreet }}</p>
+            <p>{{ selectedOrder.shippingCity }}, {{ selectedOrder.shippingState }} {{ selectedOrder.shippingPostalCode }}</p>
+            <p>{{ selectedOrder.shippingCountry }}</p>
+          </div>
+        </div>
+
+        <!-- Order Items -->
+        <div class="info-section">
+          <h3>Order Items</h3>
+          <div class="items-list">
+            <div *ngFor="let item of selectedOrder.items" class="item-row">
+              <div class="item-info">
+                <span class="item-name">{{ item.productName }}</span>
+                <span class="item-quantity">Qty: {{ item.quantity }}</span>
+              </div>
+              <div class="item-price">${{ (item.price * item.quantity) | number:'1.2-2' }}</div>
+            </div>
+          </div>
+          <div class="order-total">
+            <strong>Total: ${{ selectedOrder.totalAmount | number:'1.2-2' }}</strong>
+          </div>
+        </div>
+
+        <!-- Payment Information -->
+        <div class="info-section">
+          <h3>Payment Information</h3>
+          <div class="info-grid">
+            <div class="info-item">
+              <label>Payment Method:</label>
+              <span>{{ selectedOrder.paymentMethod }}</span>
+            </div>
+            <div class="info-item">
+              <label>Payment Status:</label>
+              <span class="status-badge" [ngClass]="getStatusClass(selectedOrder.paymentStatus)">
+                {{ selectedOrder.paymentStatus }}
+              </span>
+            </div>
+            <div class="info-item">
+              <label>Transaction ID:</label>
+              <span>{{ selectedOrder.paymentTransactionId }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Order Status Update -->
+        <div class="info-section">
+          <h3>Update Order</h3>
+          <form (ngSubmit)="updateOrderStatus()" class="update-form">
+            <div class="form-group">
+              <label for="orderStatus">Order Status:</label>
+              <select id="orderStatus" [(ngModel)]="updateOrderRequest.status" name="status" class="form-control">
+                <option *ngFor="let status of orderStatuses" [value]="status">{{ status }}</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="trackingNumber">Tracking Number:</label>
+              <input 
+                type="text" 
+                id="trackingNumber"
+                [(ngModel)]="updateOrderRequest.trackingNumber"
+                name="trackingNumber"
+                placeholder="Enter tracking number"
+                class="form-control">
+            </div>
+
+            <div class="form-group">
+              <label for="notes">Notes:</label>
+              <textarea 
+                id="notes"
+                [(ngModel)]="updateOrderRequest.notes"
+                name="notes"
+                placeholder="Add notes (optional)"
+                rows="3"
+                class="form-control"></textarea>
+            </div>
+
+            <div class="form-actions">
+              <button type="submit" class="update-btn" [disabled]="isUpdatingOrder">
+                <span *ngIf="isUpdatingOrder" class="spinner-small"></span>
+                {{ isUpdatingOrder ? 'Updating...' : 'Update Order' }}
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
